@@ -7,9 +7,15 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		E888C4981BF1C9C000A3BB13 /* FileSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E888C4971BF1C9C000A3BB13 /* FileSelectionCollectionViewCell.swift */; };
+		E888C49A1BF1C9CC00A3BB13 /* FileSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E888C4991BF1C9CC00A3BB13 /* FileSelectionCollectionViewCell.xib */; };
+		E888C49C1BF1D2F200A3BB13 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E888C49B1BF1D2F200A3BB13 /* Photos.framework */; };
 		E8D1E9761BF1A1850043823A /* FileSelectionController.h in Headers */ = {isa = PBXBuildFile; fileRef = E8D1E9751BF1A1850043823A /* FileSelectionController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E8D1E97D1BF1A1860043823A /* FileSelectionController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8D1E9721BF1A1850043823A /* FileSelectionController.framework */; };
 		E8D1E9821BF1A1860043823A /* FileSelectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D1E9811BF1A1860043823A /* FileSelectionControllerTests.swift */; };
+		E8D1E98D1BF1A19B0043823A /* FileSelectionView.xib in Resources */ = {isa = PBXBuildFile; fileRef = E8D1E98C1BF1A19B0043823A /* FileSelectionView.xib */; };
+		E8D1E98F1BF1A3570043823A /* FileSelectionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D1E98E1BF1A3570043823A /* FileSelectionViewController.swift */; };
+		E8D1E9911BF1A5CF0043823A /* FileSelectionView.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D1E9901BF1A5CF0043823A /* FileSelectionView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -23,12 +29,18 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		E888C4971BF1C9C000A3BB13 /* FileSelectionCollectionViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSelectionCollectionViewCell.swift; sourceTree = "<group>"; };
+		E888C4991BF1C9CC00A3BB13 /* FileSelectionCollectionViewCell.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileSelectionCollectionViewCell.xib; sourceTree = "<group>"; };
+		E888C49B1BF1D2F200A3BB13 /* Photos.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Photos.framework; path = System/Library/Frameworks/Photos.framework; sourceTree = SDKROOT; };
 		E8D1E9721BF1A1850043823A /* FileSelectionController.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = FileSelectionController.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D1E9751BF1A1850043823A /* FileSelectionController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = FileSelectionController.h; sourceTree = "<group>"; };
 		E8D1E9771BF1A1850043823A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		E8D1E97C1BF1A1860043823A /* FileSelectionControllerTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FileSelectionControllerTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		E8D1E9811BF1A1860043823A /* FileSelectionControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FileSelectionControllerTests.swift; sourceTree = "<group>"; };
 		E8D1E9831BF1A1860043823A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		E8D1E98C1BF1A19B0043823A /* FileSelectionView.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = FileSelectionView.xib; sourceTree = "<group>"; };
+		E8D1E98E1BF1A3570043823A /* FileSelectionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSelectionViewController.swift; sourceTree = "<group>"; };
+		E8D1E9901BF1A5CF0043823A /* FileSelectionView.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FileSelectionView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -36,6 +48,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E888C49C1BF1D2F200A3BB13 /* Photos.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -72,7 +85,13 @@
 			isa = PBXGroup;
 			children = (
 				E8D1E9751BF1A1850043823A /* FileSelectionController.h */,
+				E8D1E98E1BF1A3570043823A /* FileSelectionViewController.swift */,
+				E8D1E9901BF1A5CF0043823A /* FileSelectionView.swift */,
+				E8D1E98C1BF1A19B0043823A /* FileSelectionView.xib */,
 				E8D1E9771BF1A1850043823A /* Info.plist */,
+				E888C4971BF1C9C000A3BB13 /* FileSelectionCollectionViewCell.swift */,
+				E888C4991BF1C9CC00A3BB13 /* FileSelectionCollectionViewCell.xib */,
+				E888C49B1BF1D2F200A3BB13 /* Photos.framework */,
 			);
 			path = FileSelectionController;
 			sourceTree = "<group>";
@@ -177,6 +196,8 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E8D1E98D1BF1A19B0043823A /* FileSelectionView.xib in Resources */,
+				E888C49A1BF1C9CC00A3BB13 /* FileSelectionCollectionViewCell.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -194,6 +215,9 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				E888C4981BF1C9C000A3BB13 /* FileSelectionCollectionViewCell.swift in Sources */,
+				E8D1E98F1BF1A3570043823A /* FileSelectionViewController.swift in Sources */,
+				E8D1E9911BF1A5CF0043823A /* FileSelectionView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -308,26 +332,31 @@
 		E8D1E9871BF1A1860043823A /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = FileSelectionController/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.unsignedapps.FileSelectionController;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SKIP_INSTALL = YES;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
 			};
 			name = Debug;
 		};
 		E8D1E9881BF1A1860043823A /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_MODULES = YES;
 				DEFINES_MODULE = YES;
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = FileSelectionController/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -376,6 +405,7 @@
 				E8D1E9881BF1A1860043823A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 		E8D1E9891BF1A1860043823A /* Build configuration list for PBXNativeTarget "FileSelectionControllerTests" */ = {
 			isa = XCConfigurationList;
@@ -384,6 +414,7 @@
 				E8D1E98B1BF1A1860043823A /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
