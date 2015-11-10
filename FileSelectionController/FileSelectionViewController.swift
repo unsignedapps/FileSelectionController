@@ -55,7 +55,7 @@ public class FileSelectionViewController: UIViewController
     {
         guard let window = UIApplication.sharedApplication().keyWindow, root = window.rootViewController else { throw FileSelectionViewControllerError.NoKeyWindow; }
 
-        let presenter = root.presentingViewController ?? root;
+        let presenter = root.presentedViewController ?? root;
         let controller = FileSelectionViewController();
         controller.completion = completion;
         controller.modalPresentationStyle = .OverFullScreen;
