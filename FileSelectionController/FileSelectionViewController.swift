@@ -17,6 +17,10 @@ public class FileSelectionViewController: UIViewController
     @IBOutlet var photoButton: UIButton?
     @IBOutlet var stackView: UIStackView?
     @IBOutlet var collectionView: UICollectionView?
+    @IBOutlet var collectionViewPadding: NSLayoutConstraint?
+    @IBOutlet var collectionViewHeight: NSLayoutConstraint?
+    
+    let animationDuration = 0.34;
     
     // Photos
     var assets: PHFetchResult?
@@ -43,12 +47,91 @@ public class FileSelectionViewController: UIViewController
         collection.registerNib(FileSelectionCollectionViewCell.nib, forCellWithReuseIdentifier: FileSelectionCollectionViewCell.reuseIdentifier);
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self);
         
+        // do we have access to the photos?
+        if PHPhotoLibrary.authorizationStatus() != .Authorized
+        {
+            self.hideCollectionView(false, completion: nil);
+            PHPhotoLibrary.requestAuthorization
+            {
+                status in
+                if status == .Authorized
+                {
+                    dispatch_async(dispatch_get_main_queue())
+                    {
+                        self.loadPhotos();
+                    }
+                }
+            }
+
+        } else
+        {
+            self.loadPhotos();
+        }
+    }
+    
+    private func hideCollectionView (animated: Bool, completion: ((Bool) -> ())?)
+    {
+        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding else { return; }
+        
+        height.constant = 0;
+        padding.constant = 5;
+        let animations: () -> () =
+        {
+            self.view.layoutIfNeeded();
+        }
+        
+        if animated
+        {
+            UIView.animateWithDuration(self.animationDuration, animations: animations, completion: completion);
+
+        } else
+        {
+            animations();
+        }
+    }
+    
+    private func showCollectionView (animated: Bool, completion: ((Bool) -> ())?)
+    {
+        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding else { return; }
+        
+        height.constant = 100;
+        padding.constant = 15;
+        let animations: () -> () =
+        {
+            self.view.layoutIfNeeded();
+        }
+        
+        if animated
+        {
+            UIView.animateWithDuration(self.animationDuration, animations: animations, completion: completion);
+
+        } else
+        {
+            animations();
+        }
+    }
+    
+    private func isCollectionViewHidden () -> Bool
+    {
+        guard let height = self.collectionViewHeight else { return false; }
+        return height.constant == 0;
+    }
+    
+    private func loadPhotos ()
+    {
         let options = PHFetchOptions();
         options.fetchLimit = 100;
         
         // find the most recent album
         let recent = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumRecentlyAdded, options: options);
         self.assets = PHAsset.fetchAssetsInAssetCollection(recent[0] as! PHAssetCollection, options: options);
+        self.collectionView?.reloadData();
+
+        // if it is hidden we need to show it
+        if self.isCollectionViewHidden()
+        {
+            self.showCollectionView(true, completion:nil);
+        }
     }
 
     public static func present (multiple: Bool = false, completion: (UIImage?, NSError?) -> ()) throws
@@ -209,5 +292,15 @@ extension FileSelectionViewController: PHPhotoLibraryChangeObserver
 {
     public func photoLibraryDidChange(changeInstance: PHChange)
     {
+        dispatch_async(dispatch_get_main_queue())
+        {
+            // did it change?
+            guard let assets = self.assets, collection = self.collectionView else { return };
+            if let details = changeInstance.changeDetailsForFetchResult(assets)
+            {
+                self.assets = details.fetchResultAfterChanges;
+                collection.reloadData();
+            }
+        }
     }
 }

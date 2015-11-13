@@ -1,13 +1,14 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <deployment identifier="iOS"/>
         <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FileSelectionViewController" customModule="FileSelectionController" customModuleProvider="target">
             <connections>
                 <outlet property="collectionView" destination="ExV-AX-iSN" id="eyh-vc-1nQ"/>
+                <outlet property="collectionViewHeight" destination="1OO-i8-mV3" id="gYu-dK-y1w"/>
+                <outlet property="collectionViewPadding" destination="Ihl-45-MrQ" id="sm8-XZ-Hdk"/>
                 <outlet property="libraryButton" destination="3N7-DP-DHR" id="bcT-Yd-yuq"/>
                 <outlet property="photoButton" destination="zmD-3f-1Qk" id="FHd-uz-ooE"/>
                 <outlet property="stackView" destination="WHS-Z8-9ei" id="70a-lL-uWT"/>
