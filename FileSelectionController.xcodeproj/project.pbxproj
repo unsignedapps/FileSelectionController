@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		E888C4981BF1C9C000A3BB13 /* FileSelectionCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = E888C4971BF1C9C000A3BB13 /* FileSelectionCollectionViewCell.swift */; };
 		E888C49A1BF1C9CC00A3BB13 /* FileSelectionCollectionViewCell.xib in Resources */ = {isa = PBXBuildFile; fileRef = E888C4991BF1C9CC00A3BB13 /* FileSelectionCollectionViewCell.xib */; };
-		E888C49C1BF1D2F200A3BB13 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E888C49B1BF1D2F200A3BB13 /* Photos.framework */; };
+		E888C49C1BF1D2F200A3BB13 /* Photos.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E888C49B1BF1D2F200A3BB13 /* Photos.framework */; settings = {ATTRIBUTES = (Weak, ); }; };
 		E8D1E9761BF1A1850043823A /* FileSelectionController.h in Headers */ = {isa = PBXBuildFile; fileRef = E8D1E9751BF1A1850043823A /* FileSelectionController.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		E8D1E97D1BF1A1860043823A /* FileSelectionController.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = E8D1E9721BF1A1850043823A /* FileSelectionController.framework */; };
 		E8D1E9821BF1A1860043823A /* FileSelectionControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = E8D1E9811BF1A1860043823A /* FileSelectionControllerTests.swift */; };
@@ -337,7 +337,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = FileSelectionController/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
@@ -357,7 +356,6 @@
 				DYLIB_COMPATIBILITY_VERSION = 1;
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				EMBEDDED_CONTENT_CONTAINS_SWIFT = YES;
 				INFOPLIST_FILE = FileSelectionController/Info.plist;
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
