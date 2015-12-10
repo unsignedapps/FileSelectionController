@@ -121,10 +121,11 @@ public class FileSelectionViewController: UIViewController
     {
         let options = PHFetchOptions();
         options.fetchLimit = 100;
-        options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ];
         
         // find the most recent album
         let recent = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumRecentlyAdded, options: options);
+
+        options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ];
         self.assets = PHAsset.fetchAssetsInAssetCollection(recent[0] as! PHAssetCollection, options: options);
         self.collectionView?.reloadData();
 
