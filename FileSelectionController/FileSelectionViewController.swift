@@ -176,13 +176,13 @@ public class FileSelectionViewController: UIViewController
         }
     }
 
-    public static func present (multiple: Bool = false, completion: (UIImage?, NSError?) -> ()) throws
+    public static func present (multiple: Bool = false, completion: ((UIImage?, NSError?) -> ())?) throws
     {
         let controller = FileSelectionViewController();
         try controller.present(multiple, completion: completion)
     }
     
-    public func present (multiple: Bool = false, completion: (UIImage?, NSError?) -> ()) throws
+    public func present (multiple: Bool = false, completion: ((UIImage?, NSError?) -> ())?) throws
     {
         guard let window = UIApplication.sharedApplication().keyWindow, root = window.rootViewController else { throw FileSelectionViewControllerError.NoKeyWindow; }
 
