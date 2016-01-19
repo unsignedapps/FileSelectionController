@@ -178,15 +178,20 @@ public class FileSelectionViewController: UIViewController
 
     public static func present (multiple: Bool = false, completion: (UIImage?, NSError?) -> ()) throws
     {
+        let controller = FileSelectionViewController();
+        try controller.present(multiple, completion: completion)
+    }
+    
+    public func present (multiple: Bool = false, completion: (UIImage?, NSError?) -> ()) throws
+    {
         guard let window = UIApplication.sharedApplication().keyWindow, root = window.rootViewController else { throw FileSelectionViewControllerError.NoKeyWindow; }
 
         let presenter = root.presentedViewController ?? root;
-        let controller = FileSelectionViewController();
-        controller.completion = completion;
-        controller.modalPresentationStyle = .OverFullScreen;
-        controller.adjustOptions();
-        controller.selectMultiple = multiple;
-        presenter.presentViewController(controller, animated: true, completion: nil);
+        self.completion = completion;
+        self.modalPresentationStyle = .OverFullScreen;
+        self.adjustOptions();
+        self.selectMultiple = multiple;
+        presenter.presentViewController(self, animated: true, completion: nil);
     }
     
     public func hide ()
