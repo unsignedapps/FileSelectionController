@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10089" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10072.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner" customClass="FileSelectionViewController" customModule="FileSelectionController" customModuleProvider="target">
@@ -27,7 +27,6 @@
                             <subviews>
                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" dataMode="none" translatesAutoresizingMaskIntoConstraints="NO" id="ExV-AX-iSN">
                                     <rect key="frame" x="0.0" y="0.0" width="384" height="100"/>
-                                    <animations/>
                                     <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="100" id="1OO-i8-mV3"/>
@@ -45,7 +44,6 @@
                                 </collectionView>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="3N7-DP-DHR">
                                     <rect key="frame" x="0.0" y="110" width="384" height="40"/>
-                                    <animations/>
                                     <color key="backgroundColor" red="0.29411764705882354" green="0.29411764705882354" blue="0.29411764705882354" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="mgj-G7-bXH"/>
@@ -64,7 +62,6 @@
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="zmD-3f-1Qk">
                                     <rect key="frame" x="0.0" y="160" width="384" height="40"/>
-                                    <animations/>
                                     <color key="backgroundColor" red="0.29411764705882354" green="0.29411764705882354" blue="0.29411764705882354" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="ErC-yB-kVJ"/>
@@ -83,7 +80,6 @@
                                 </button>
                                 <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="fNN-AS-Hee">
                                     <rect key="frame" x="0.0" y="210" width="384" height="40"/>
-                                    <animations/>
                                     <color key="backgroundColor" red="0.23529411764705882" green="0.23529411764705882" blue="0.23529411764705882" alpha="1" colorSpace="calibratedRGB"/>
                                     <constraints>
                                         <constraint firstAttribute="height" constant="40" id="CSq-2A-H8c"/>
@@ -101,10 +97,8 @@
                                     </connections>
                                 </button>
                             </subviews>
-                            <animations/>
                         </stackView>
                     </subviews>
-                    <animations/>
                     <color key="backgroundColor" red="0.20000000000000001" green="0.20000000000000001" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
                     <constraints>
                         <constraint firstItem="WHS-Z8-9ei" firstAttribute="leading" secondItem="iEn-Vu-Hgv" secondAttribute="leading" constant="15" id="5Ak-Ao-fXF"/>
@@ -114,7 +108,6 @@
                     </constraints>
                 </view>
             </subviews>
-            <animations/>
             <color key="backgroundColor" red="0.15056313569999999" green="0.15055863559999999" blue="0.15056121350000001" alpha="1" colorSpace="calibratedRGB"/>
             <gestureRecognizers/>
             <constraints>

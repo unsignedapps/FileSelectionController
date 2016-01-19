@@ -13,6 +13,13 @@ public class FileSelectionViewController: UIViewController
 {
     var completion: ((UIImage?, NSError?) -> ())?
     
+    var selectMultiple: Bool = false
+    {
+        didSet {
+            self.collectionView?.allowsMultipleSelection = self.selectMultiple;
+        }
+    }
+    
     @IBOutlet var libraryButton: UIButton?
     @IBOutlet var photoButton: UIButton?
     @IBOutlet var stackView: UIStackView?
@@ -25,6 +32,9 @@ public class FileSelectionViewController: UIViewController
     // Photos
     var assets: PHFetchResult?
     var imageManager = PHCachingImageManager()
+    
+    // Selection
+    var selectionOrder: [NSIndexPath] = []
     
     deinit
     {
@@ -43,6 +53,8 @@ public class FileSelectionViewController: UIViewController
         super.viewDidLoad();
         
         guard let collection = self.collectionView else { return; }
+        
+        collection.allowsMultipleSelection = self.selectMultiple;
         
         collection.registerNib(FileSelectionCollectionViewCell.nib, forCellWithReuseIdentifier: FileSelectionCollectionViewCell.reuseIdentifier);
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self);
@@ -66,6 +78,34 @@ public class FileSelectionViewController: UIViewController
         } else
         {
             self.loadPhotos();
+        }
+    }
+    
+    public func selectedImages (completion: ([UIImage] -> ()))
+    {
+        guard self.selectionOrder.count > 0 else { completion([]); return; }
+        
+        var images: [UIImage] = [];
+        var count = self.selectionOrder.count;
+        self.selectionOrder.forEach
+        {
+            path in
+            if let asset = self.assets?[path.row] as? PHAsset
+            {
+                self.imageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
+                {
+                    (image, info) in
+                    if let image = image
+                    {
+                        images.append(image);
+                    }
+                    count -= 1;
+                    if count <= 0
+                    {
+                        completion(images);
+                    }
+                }
+            }
         }
     }
     
@@ -145,6 +185,7 @@ public class FileSelectionViewController: UIViewController
         controller.completion = completion;
         controller.modalPresentationStyle = .OverFullScreen;
         controller.adjustOptions();
+        controller.selectMultiple = multiple;
         presenter.presentViewController(controller, animated: true, completion: nil);
     }
     
@@ -265,6 +306,14 @@ extension FileSelectionViewController: UICollectionViewDelegate
 {
     public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath)
     {
+        self.selectionOrder.append(indexPath);
+        
+        guard collectionView.allowsMultipleSelection == false else
+        {
+            self.updateSelectionOrder();
+            return;
+        }
+        
         if let completion = self.completion, asset = self.assets?[indexPath.row] as? PHAsset
         {
             self.imageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
@@ -284,6 +333,26 @@ extension FileSelectionViewController: UICollectionViewDelegate
                     completion(nil, nil);
                 }
             }
+        }
+    }
+    
+    public func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath)
+    {
+        if let index = self.selectionOrder.indexOf(indexPath)
+        {
+            self.selectionOrder.removeAtIndex(index);
+            self.updateSelectionOrder();
+        }
+    }
+    
+    func updateSelectionOrder ()
+    {
+        guard let paths = self.collectionView?.indexPathsForVisibleItems() else { return; }
+        for path in paths
+        {
+            var index = self.selectionOrder.indexOf(path) ?? -1;
+            index += 1;
+            (self.collectionView?.cellForItemAtIndexPath(path) as? FileSelectionCollectionViewCell)?.selectedOrderLabel?.text = String(index)
         }
     }
 }

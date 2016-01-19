@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="9059" systemVersion="15B42" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.XIB" version="3.0" toolsVersion="10089" systemVersion="15C50" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES">
     <dependencies>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="9049"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="10072.1"/>
     </dependencies>
     <objects>
         <placeholder placeholderIdentifier="IBFilesOwner" id="-1" userLabel="File's Owner"/>
@@ -15,22 +15,50 @@
                 <subviews>
                     <imageView userInteractionEnabled="NO" contentMode="scaleAspectFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="fwx-s3-r8c">
                         <rect key="frame" x="0.0" y="0.0" width="100" height="100"/>
-                        <animations/>
                     </imageView>
+                    <label hidden="YES" opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="XX" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="0Os-l7-p5w">
+                        <rect key="frame" x="74" y="0.0" width="26" height="26"/>
+                        <color key="backgroundColor" red="0.50980392159999999" green="0.62352941179999999" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                        <constraints>
+                            <constraint firstAttribute="height" constant="26" id="2JQ-Vd-lF9"/>
+                            <constraint firstAttribute="width" constant="26" id="jOO-zO-pQM"/>
+                        </constraints>
+                        <fontDescription key="fontDescription" type="system" weight="light" pointSize="14"/>
+                        <color key="textColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="calibratedRGB"/>
+                        <nil key="highlightedColor"/>
+                    </label>
                 </subviews>
-                <animations/>
                 <color key="backgroundColor" white="0.0" alpha="0.0" colorSpace="calibratedWhite"/>
             </view>
-            <animations/>
             <color key="backgroundColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
             <constraints>
                 <constraint firstItem="fwx-s3-r8c" firstAttribute="leading" secondItem="Zbw-0N-4VF" secondAttribute="leading" id="4rx-K4-VLx"/>
                 <constraint firstItem="fwx-s3-r8c" firstAttribute="top" secondItem="Zbw-0N-4VF" secondAttribute="top" id="TuD-A3-7p9"/>
                 <constraint firstAttribute="bottom" secondItem="fwx-s3-r8c" secondAttribute="bottom" id="l39-A1-OqB"/>
                 <constraint firstAttribute="trailing" secondItem="fwx-s3-r8c" secondAttribute="trailing" id="wO0-vS-JKj"/>
+                <constraint firstItem="0Os-l7-p5w" firstAttribute="top" secondItem="Zbw-0N-4VF" secondAttribute="top" id="yif-Az-y5W"/>
+                <constraint firstAttribute="trailing" secondItem="0Os-l7-p5w" secondAttribute="trailing" id="z9u-aH-QBY"/>
             </constraints>
+            <userDefinedRuntimeAttributes>
+                <userDefinedRuntimeAttribute type="color" keyPath="borderColor">
+                    <color key="value" red="0.50980392156862742" green="0.62352941176470589" blue="0.78431372549019607" alpha="1" colorSpace="calibratedRGB"/>
+                </userDefinedRuntimeAttribute>
+                <userDefinedRuntimeAttribute type="number" keyPath="borderWidth">
+                    <real key="value" value="3"/>
+                </userDefinedRuntimeAttribute>
+                <userDefinedRuntimeAttribute type="color" keyPath="selectedBorderColor">
+                    <color key="value" red="0.50980392159999999" green="0.62352941179999999" blue="0.7843137255" alpha="1" colorSpace="calibratedRGB"/>
+                </userDefinedRuntimeAttribute>
+                <userDefinedRuntimeAttribute type="number" keyPath="selectedBorderWidth">
+                    <real key="value" value="3"/>
+                </userDefinedRuntimeAttribute>
+                <userDefinedRuntimeAttribute type="number" keyPath="selectedCornerRadius">
+                    <real key="value" value="8"/>
+                </userDefinedRuntimeAttribute>
+            </userDefinedRuntimeAttributes>
             <connections>
                 <outlet property="imageView" destination="fwx-s3-r8c" id="MaD-eK-cEG"/>
+                <outlet property="selectedOrderLabel" destination="0Os-l7-p5w" id="iSV-TH-p62"/>
             </connections>
             <point key="canvasLocation" x="187" y="375"/>
         </collectionViewCell>
