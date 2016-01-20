@@ -11,13 +11,19 @@ import Photos
 
 public class FileSelectionViewController: UIViewController
 {
-    var completion: ((UIImage?, NSError?) -> ())?
+    var completion: (([UIImage], NSError?) -> ())?
     
-    var selectMultiple: Bool = false
+    public var selectMultiple: Bool = false
     {
         didSet {
             self.collectionView?.allowsMultipleSelection = self.selectMultiple;
         }
+    }
+    
+    public var uploadButtonTitle: String?
+    {
+        get { return self.uploadButton?.titleForState(.Normal); }
+        set (value) { self.uploadButton?.setTitle(value, forState: .Normal); }
     }
     
     @IBOutlet var libraryButton: UIButton?
@@ -26,7 +32,9 @@ public class FileSelectionViewController: UIViewController
     @IBOutlet var collectionView: UICollectionView?
     @IBOutlet var collectionViewPadding: NSLayoutConstraint?
     @IBOutlet var collectionViewHeight: NSLayoutConstraint?
-    
+    @IBOutlet var uploadButton: UIButton?
+    @IBOutlet var uploadButtonHeight: NSLayoutConstraint?
+
     let animationDuration = 0.34;
     
     // Photos
@@ -81,40 +89,13 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    public func selectedImages (completion: ([UIImage] -> ()))
-    {
-        guard self.selectionOrder.count > 0 else { completion([]); return; }
-        
-        var images: [UIImage] = [];
-        var count = self.selectionOrder.count;
-        self.selectionOrder.forEach
-        {
-            path in
-            if let asset = self.assets?[path.row] as? PHAsset
-            {
-                self.imageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
-                {
-                    (image, info) in
-                    if let image = image
-                    {
-                        images.append(image);
-                    }
-                    count -= 1;
-                    if count <= 0
-                    {
-                        completion(images);
-                    }
-                }
-            }
-        }
-    }
-    
     private func hideCollectionView (animated: Bool, completion: ((Bool) -> ())?)
     {
-        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding else { return; }
+        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding, button = self.uploadButton, buttonHeight = self.uploadButtonHeight else { return; }
         
         height.constant = 0;
         padding.constant = 5;
+        buttonHeight.constant = 0;
         let animations: () -> () =
         {
             self.view.layoutIfNeeded();
@@ -151,6 +132,46 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
+    private func hideUploadButton (animated: Bool)
+    {
+        guard let button = self.uploadButton, height = self.uploadButtonHeight else { return; }
+        
+        height.constant = 0
+        let animations: () -> () =
+        {
+            self.view.layoutIfNeeded();
+        }
+        
+        if animated
+        {
+            UIView.animateWithDuration(self.animationDuration, animations: animations);
+        
+        } else
+        {
+            animations();
+        }
+    }
+    
+    private func showUploadButton (animated: Bool)
+    {
+        guard let button = self.uploadButton, height = self.uploadButtonHeight else { return; }
+        
+        height.constant = 40;
+        let animations: () -> () =
+        {
+            self.view.layoutIfNeeded();
+        }
+        
+        if animated
+        {
+            UIView.animateWithDuration(self.animationDuration, animations: animations);
+            
+        } else
+        {
+            animations();
+        }
+    }
+    
     private func isCollectionViewHidden () -> Bool
     {
         guard let height = self.collectionViewHeight else { return false; }
@@ -176,13 +197,13 @@ public class FileSelectionViewController: UIViewController
         }
     }
 
-    public static func present (multiple: Bool = false, completion: ((UIImage?, NSError?) -> ())?) throws
+    public static func present (multiple: Bool = false, completion: (([UIImage], NSError?) -> ())?) throws
     {
         let controller = FileSelectionViewController();
         try controller.present(multiple, completion: completion)
     }
     
-    public func present (multiple: Bool = false, completion: ((UIImage?, NSError?) -> ())?) throws
+    public func present (multiple: Bool = false, completion: (([UIImage], NSError?) -> ())?) throws
     {
         guard let window = UIApplication.sharedApplication().keyWindow, root = window.rootViewController else { throw FileSelectionViewControllerError.NoKeyWindow; }
 
@@ -200,7 +221,7 @@ public class FileSelectionViewController: UIViewController
         {
             if let completion = self.completion
             {
-                completion(nil, nil)
+                completion([], nil)
             }
         };
     }
@@ -241,6 +262,44 @@ public class FileSelectionViewController: UIViewController
     {
         self.hide();
     }
+    
+    @IBAction func uploadPhotosButtonPressed(sender: UIButton)
+    {
+        if let completion = self.completion
+        {
+            self.selectedImages(completion);
+            self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil);
+        }
+    }
+    
+    private func selectedImages (completion: (([UIImage], NSError?) -> ()))
+    {
+        guard self.selectionOrder.count > 0 else { completion([], nil); return; }
+        
+        var images: [UIImage] = [];
+        var count = self.selectionOrder.count;
+        self.selectionOrder.forEach
+        {
+            path in
+            if let asset = self.assets?[path.row] as? PHAsset
+            {
+                self.imageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
+                    {
+                        (image, info) in
+                        if let image = image
+                        {
+                            images.append(image);
+                        }
+                        count -= 1;
+                        if count <= 0
+                        {
+                            completion(images, nil);
+                        }
+                }
+            }
+        }
+    }
+    
 }
 
 public enum FileSelectionViewControllerError: ErrorType
@@ -258,7 +317,7 @@ extension FileSelectionViewController: UIImagePickerControllerDelegate, UINaviga
         {
             if let completion = self.completion
             {
-                completion(image, nil);
+                completion([image], nil);
             }
         }
     }
@@ -269,7 +328,7 @@ extension FileSelectionViewController: UIImagePickerControllerDelegate, UINaviga
         {
             if let completion = self.completion
             {
-                completion(nil, nil);
+                completion([], nil);
             }
         }
     }
@@ -311,11 +370,16 @@ extension FileSelectionViewController: UICollectionViewDelegate
 {
     public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath)
     {
-        self.selectionOrder.append(indexPath);
         
         guard collectionView.allowsMultipleSelection == false else
         {
+            let shouldShow = self.selectionOrder.count == 0;
+            self.selectionOrder.append(indexPath);
             self.updateSelectionOrder();
+            if shouldShow
+            {
+                self.showUploadButton(true);
+            }
             return;
         }
         
@@ -326,7 +390,13 @@ extension FileSelectionViewController: UICollectionViewDelegate
                 (image, info) in
                 self.presentingViewController?.dismissViewControllerAnimated(true)
                 {
-                    completion(image, nil);
+                    if let i = image
+                    {
+                        completion([i], nil);
+                    } else
+                    {
+                        completion([], nil);
+                    }
                 }
             }
         } else
@@ -335,7 +405,7 @@ extension FileSelectionViewController: UICollectionViewDelegate
             {
                 if let completion = self.completion
                 {
-                    completion(nil, nil);
+                    completion([], nil);
                 }
             }
         }
@@ -347,6 +417,11 @@ extension FileSelectionViewController: UICollectionViewDelegate
         {
             self.selectionOrder.removeAtIndex(index);
             self.updateSelectionOrder();
+            
+            if self.selectionOrder.count == 0
+            {
+                self.hideUploadButton(true);
+            }
         }
     }
     
