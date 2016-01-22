@@ -357,6 +357,10 @@ extension FileSelectionViewController: UICollectionViewDataSource
             {
                 (image, info) in
                 cell.image = image;
+                if let order = self.selectionOrder.indexOf(indexPath)
+                {
+                    cell.selectedOrder = order + 1;
+                }
             }
         }
         
@@ -432,7 +436,7 @@ extension FileSelectionViewController: UICollectionViewDelegate
         {
             var index = self.selectionOrder.indexOf(path) ?? -1;
             index += 1;
-            (self.collectionView?.cellForItemAtIndexPath(path) as? FileSelectionCollectionViewCell)?.selectedOrderLabel?.text = String(index)
+            (self.collectionView?.cellForItemAtIndexPath(path) as? FileSelectionCollectionViewCell)?.selectedOrder = index
         }
     }
 }

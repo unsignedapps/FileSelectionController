@@ -15,6 +15,14 @@ class FileSelectionCollectionViewCell: UICollectionViewCell
     @IBInspectable var selectedBorderWidth: Float = 1.0
     @IBInspectable var selectedCornerRadius: Float = 8.0
     
+    var selectedOrder: Int?
+    {
+        didSet
+        {
+            self.selectedOrderLabel?.text = self.selectedOrder != nil ? String(self.selectedOrder) : nil;
+        }
+    }
+
     @IBOutlet var selectedOrderLabel: UILabel?
     @IBOutlet var imageView: UIImageView?
     var image: UIImage? = nil
@@ -59,6 +67,12 @@ class FileSelectionCollectionViewCell: UICollectionViewCell
         let radius = CGSizeMake(CGFloat(self.selectedCornerRadius), CGFloat(self.selectedCornerRadius));
         layer.path = UIBezierPath(roundedRect: label.bounds, byRoundingCorners: [.TopRight, .BottomLeft], cornerRadii: radius).CGPath;
         label.layer.mask = layer;
+    }
+    
+    override func prepareForReuse()
+    {
+        super.prepareForReuse();
+        self.selectedOrder = nil;
     }
     
     static var nib: UINib
