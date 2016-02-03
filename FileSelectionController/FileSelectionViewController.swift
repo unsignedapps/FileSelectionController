@@ -26,6 +26,12 @@ public class FileSelectionViewController: UIViewController
         set (value) { self.uploadButton?.setTitle(value, forState: .Normal); }
     }
     
+    public var uploadButtonColor: UIColor?
+    {
+        get { return self.uploadButton?.backgroundColor; }
+        set (value) { self.uploadButton?.backgroundColor = value; }
+    }
+    
     @IBOutlet var libraryButton: UIButton?
     @IBOutlet var photoButton: UIButton?
     @IBOutlet var stackView: UIStackView?
@@ -91,7 +97,7 @@ public class FileSelectionViewController: UIViewController
     
     private func hideCollectionView (animated: Bool, completion: ((Bool) -> ())?)
     {
-        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding, button = self.uploadButton, buttonHeight = self.uploadButtonHeight else { return; }
+        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding, buttonHeight = self.uploadButtonHeight else { return; }
         
         height.constant = 0;
         padding.constant = 5;
@@ -134,7 +140,7 @@ public class FileSelectionViewController: UIViewController
     
     private func hideUploadButton (animated: Bool)
     {
-        guard let button = self.uploadButton, height = self.uploadButtonHeight else { return; }
+        guard let height = self.uploadButtonHeight else { return; }
         
         height.constant = 0
         let animations: () -> () =
@@ -154,7 +160,7 @@ public class FileSelectionViewController: UIViewController
     
     private func showUploadButton (animated: Bool)
     {
-        guard let button = self.uploadButton, height = self.uploadButtonHeight else { return; }
+        guard let height = self.uploadButtonHeight else { return; }
         
         height.constant = 40;
         let animations: () -> () =
