@@ -28,11 +28,19 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    public var uploadButtonColor: UIColor?
+    public var highlightColor: UIColor?
     {
         didSet
         {
-            self.uploadButton?.backgroundColor = self.uploadButtonColor;
+            self.uploadButton?.backgroundColor = self.highlightColor;
+        }
+    }
+    
+    public var highlightTextColor: UIColor?
+    {
+        didSet
+        {
+            self.uploadButton?.setTitleColor(self.highlightColor, forState: .Normal);
         }
     }
     
@@ -69,9 +77,13 @@ public class FileSelectionViewController: UIViewController
         {
             self.uploadButton?.setTitle(title, forState: .Normal);
         }
-        if let color = self.uploadButtonColor
+        if let color = self.highlightColor
         {
             self.uploadButton?.backgroundColor = color;
+        }
+        if let titleColor = self.highlightTextColor
+        {
+            self.uploadButton?.setTitleColor(titleColor, forState: .Normal);
         }
     }
     
@@ -303,17 +315,17 @@ public class FileSelectionViewController: UIViewController
             if let asset = self.assets?[path.row] as? PHAsset
             {
                 self.imageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
+                {
+                    (image, info) in
+                    if let image = image
                     {
-                        (image, info) in
-                        if let image = image
-                        {
-                            images.append(image);
-                        }
-                        count -= 1;
-                        if count <= 0
-                        {
-                            completion(images, nil);
-                        }
+                        images.append(image);
+                    }
+                    count -= 1;
+                    if count <= 0
+                    {
+                        completion(images, nil);
+                    }
                 }
             }
         }
@@ -380,6 +392,9 @@ extension FileSelectionViewController: UICollectionViewDataSource
                 {
                     cell.selectedOrder = order + 1;
                 }
+                
+                if let color = self.highlightColor { cell.selectedBorderColor = color; }
+                if let textColor = self.highlightTextColor { cell.selectedTextColor = textColor; }
             }
         }
         

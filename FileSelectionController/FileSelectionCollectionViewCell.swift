@@ -14,6 +14,7 @@ class FileSelectionCollectionViewCell: UICollectionViewCell
     @IBInspectable var selectedBorderColor: UIColor = UIColor.blueColor()
     @IBInspectable var selectedBorderWidth: Float = 1.0
     @IBInspectable var selectedCornerRadius: Float = 8.0
+    @IBInspectable var selectedTextColor: UIColor = UIColor.whiteColor()
     
     var selectedOrder: Int?
     {
@@ -46,6 +47,9 @@ class FileSelectionCollectionViewCell: UICollectionViewCell
                 self.selectedOrderLabel?.hidden = false;
                 self.clipsToBounds = true;
                 self.contentView.clipsToBounds = true;
+
+                self.selectedOrderLabel?.backgroundColor = self.selectedBorderColor;
+                self.selectedOrderLabel?.textColor = self.selectedTextColor;
                 
             } else
             {
