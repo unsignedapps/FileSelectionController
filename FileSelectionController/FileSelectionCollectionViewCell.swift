@@ -19,7 +19,7 @@ class FileSelectionCollectionViewCell: UICollectionViewCell
     {
         didSet
         {
-            self.selectedOrderLabel?.text = self.selectedOrder != nil ? String(self.selectedOrder) : nil;
+            self.selectedOrderLabel?.text = self.selectedOrder != nil ? String(self.selectedOrder!) : nil;
         }
     }
 
@@ -44,6 +44,8 @@ class FileSelectionCollectionViewCell: UICollectionViewCell
                 self.layer.borderWidth = CGFloat(self.selectedBorderWidth);
                 self.cornerRadius = CGFloat(self.selectedCornerRadius);
                 self.selectedOrderLabel?.hidden = false;
+                self.clipsToBounds = true;
+                self.contentView.clipsToBounds = true;
                 
             } else
             {
@@ -51,6 +53,8 @@ class FileSelectionCollectionViewCell: UICollectionViewCell
                 self.layer.borderColor = nil;
                 self.cornerRadius = 0.0;
                 self.selectedOrderLabel?.hidden = true;
+                self.clipsToBounds = true;
+                self.contentView.clipsToBounds = true;
             }
         }
     }

@@ -22,14 +22,18 @@ public class FileSelectionViewController: UIViewController
     
     public var uploadButtonTitle: String?
     {
-        get { return self.uploadButton?.titleForState(.Normal); }
-        set (value) { self.uploadButton?.setTitle(value, forState: .Normal); }
+        didSet
+        {
+            self.uploadButton?.setTitle(self.uploadButtonTitle, forState: .Normal);
+        }
     }
     
     public var uploadButtonColor: UIColor?
     {
-        get { return self.uploadButton?.backgroundColor; }
-        set (value) { self.uploadButton?.backgroundColor = value; }
+        didSet
+        {
+            self.uploadButton?.backgroundColor = self.uploadButtonColor;
+        }
     }
     
     @IBOutlet var libraryButton: UIButton?
@@ -60,6 +64,15 @@ public class FileSelectionViewController: UIViewController
         let nib = UINib(nibName: "FileSelectionView", bundle: NSBundle(forClass: self.dynamicType));
         self.view = UIView();
         self.view.addSubview(nib.instantiateWithOwner(self, options: nil)[0] as! UIView)
+        
+        if let title = self.uploadButtonTitle
+        {
+            self.uploadButton?.setTitle(title, forState: .Normal);
+        }
+        if let color = self.uploadButtonColor
+        {
+            self.uploadButton?.backgroundColor = color;
+        }
     }
     
     public override func viewDidLoad()
