@@ -68,10 +68,9 @@ public class FileSelectionViewController: UIViewController
     var recentlyAddedAssets: PHFetchResult?
     var singlePhotoSelectionAsset: PHFetchResult?
     
-    var imageManager = PHCachingImageManager()
+    var imageManager:PHCachingImageManager?
     var photoAlbumPlaceholder:PHObjectPlaceholder?
     var recentlyAddedPhotoLocalIdentifier: PHObjectPlaceholder?
-
     public var photoAlbumName: NSString?
     
     // Selection
@@ -115,6 +114,8 @@ public class FileSelectionViewController: UIViewController
         layout?.sectionInset = UIEdgeInsetsMake(0, 0, 0, 10)
         
         PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self);
+        
+        adjustOptions()
         
         // do we have access to the photos?
         if PHPhotoLibrary.authorizationStatus() != .Authorized
@@ -236,6 +237,12 @@ public class FileSelectionViewController: UIViewController
     
     private func loadPhotos ()
     {
+        guard PHPhotoLibrary.authorizationStatus() == .Authorized else { return }
+
+        if (imageManager == nil) {
+            imageManager = PHCachingImageManager()
+        }
+        
         let options = PHFetchOptions();
         options.fetchLimit = 100;
         
@@ -261,15 +268,15 @@ public class FileSelectionViewController: UIViewController
     
     public func present (multiple: Bool = false, completion: (([UIImage], NSError?) -> ())?) throws
     {
-        guard let window = UIApplication.sharedApplication().keyWindow, root = window.rootViewController else { throw FileSelectionViewControllerError.NoKeyWindow; }
+        guard let window = UIApplication.sharedApplication().keyWindow, root = window.rootViewController else { throw FileSelectionViewControllerError.NoKeyWindow
+        }
 
-        let presenter = root.presentedViewController ?? root;
-        self.completion = completion;
-        self.modalPresentationStyle = .OverFullScreen;
-        self.adjustOptions();
+        let presenter = root.presentedViewController ?? root
+        self.completion = completion
+        self.modalPresentationStyle = .OverFullScreen
         self.selectMultiple = multiple;
         self.modalPresentationCapturesStatusBarAppearance = true
-        presenter.presentViewController(self, animated: true, completion: nil);
+        presenter.presentViewController(self, animated: true, completion: nil)
     }
     
     public func hide ()
@@ -352,7 +359,7 @@ public class FileSelectionViewController: UIViewController
             
             if let asset = asset as? PHAsset
             {
-                self.imageManager.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
+                self.imageManager?.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
                 {
                     (image, info) in
                     if let image = image
@@ -543,7 +550,7 @@ extension FileSelectionViewController: UICollectionViewDataSource
         
         if let asset = asset as? PHAsset
         {
-            self.imageManager.requestImageForAsset(asset, targetSize: cell.frame.size, contentMode: .AspectFill, options: nil)
+            self.imageManager?.requestImageForAsset(asset, targetSize: cell.frame.size, contentMode: .AspectFill, options: nil)
             {
                 image, info in
                 cell.image = image;
