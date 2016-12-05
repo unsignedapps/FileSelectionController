@@ -9,26 +9,26 @@
 import UIKit
 import Photos
 
-public class FileSelectionViewController: UIViewController
+open class FileSelectionViewController: UIViewController
 {
     var completion: (([UIImage], NSError?) -> ())?
     
-    public var selectMultiple: Bool = false
+    open var selectMultiple: Bool = false
     {
         didSet {
             self.collectionView?.allowsMultipleSelection = self.selectMultiple;
         }
     }
     
-    public var uploadButtonTitle: String?
+    open var uploadButtonTitle: String?
     {
         didSet
         {
-            self.uploadButton?.setTitle(self.uploadButtonTitle, forState: .Normal);
+            self.uploadButton?.setTitle(self.uploadButtonTitle, for: UIControlState());
         }
     }
     
-    public var highlightColor: UIColor?
+    open var highlightColor: UIColor?
     {
         didSet
         {
@@ -36,15 +36,15 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    public var highlightTextColor: UIColor?
+    open var highlightTextColor: UIColor?
     {
         didSet
         {
-            self.uploadButton?.setTitleColor(self.highlightColor, forState: .Normal);
+            self.uploadButton?.setTitleColor(self.highlightColor, for: UIControlState());
         }
     }
     
-    private var hideStatusBar: Bool = false
+    fileprivate var hideStatusBar: Bool = false
     {
         didSet(newValue)
         {
@@ -65,31 +65,31 @@ public class FileSelectionViewController: UIViewController
 
     let animationDuration = 0.34;
     
-    var recentlyAddedAssets: PHFetchResult?
-    var singlePhotoSelectionAsset: PHFetchResult?
+    var recentlyAddedAssets: PHFetchResult<PHAsset>?
+    var singlePhotoSelectionAsset: PHFetchResult<PHAsset>?
     
     var imageManager:PHCachingImageManager?
     var photoAlbumPlaceholder:PHObjectPlaceholder?
     var recentlyAddedPhotoLocalIdentifier: PHObjectPlaceholder?
-    public var photoAlbumName: NSString?
+    open var photoAlbumName: NSString?
     
     // Selection
-    var selectionOrder: [NSIndexPath] = []
+    var selectionOrder: [IndexPath] = []
     
     deinit
     {
-        PHPhotoLibrary.sharedPhotoLibrary().unregisterChangeObserver(self);
+        PHPhotoLibrary.shared().unregisterChangeObserver(self);
     }
     
-    public override func loadView()
+    open override func loadView()
     {
-        let nib = UINib(nibName: "FileSelectionView", bundle: NSBundle(forClass: self.dynamicType));
+        let nib = UINib(nibName: "FileSelectionView", bundle: Bundle(for: type(of: self)));
         self.view = UIView();
-        self.view.addSubview(nib.instantiateWithOwner(self, options: nil)[0] as! UIView)
+        self.view.addSubview(nib.instantiate(withOwner: self, options: nil)[0] as! UIView)
         
         if let title = self.uploadButtonTitle
         {
-            self.uploadButton?.setTitle(title, forState: .Normal);
+            self.uploadButton?.setTitle(title, for: UIControlState());
         }
         if let color = self.highlightColor
         {
@@ -97,36 +97,36 @@ public class FileSelectionViewController: UIViewController
         }
         if let titleColor = self.highlightTextColor
         {
-            self.uploadButton?.setTitleColor(titleColor, forState: .Normal);
+            self.uploadButton?.setTitleColor(titleColor, for: UIControlState());
         }
     }
     
-    public override func viewDidLoad()
+    open override func viewDidLoad()
     {
         super.viewDidLoad();
         
         guard let collection = self.collectionView else { return; }
         
         collection.allowsMultipleSelection = self.selectMultiple;
-        collection.registerNib(FileSelectionCollectionViewCell.nib, forCellWithReuseIdentifier: FileSelectionCollectionViewCell.reuseIdentifier);
+        collection.register(FileSelectionCollectionViewCell.nib, forCellWithReuseIdentifier: FileSelectionCollectionViewCell.reuseIdentifier);
 
         let layout = collection.collectionViewLayout as? UICollectionViewFlowLayout
         layout?.sectionInset = UIEdgeInsetsMake(0, 0, 0, 10)
         
-        PHPhotoLibrary.sharedPhotoLibrary().registerChangeObserver(self);
+        PHPhotoLibrary.shared().register(self);
         
         adjustOptions()
         
         // do we have access to the photos?
-        if PHPhotoLibrary.authorizationStatus() != .Authorized
+        if PHPhotoLibrary.authorizationStatus() != .authorized
         {
             self.hideCollectionView(false, completion: nil);
             PHPhotoLibrary.requestAuthorization
             {
                 status in
-                if status == .Authorized
+                if status == .authorized
                 {
-                    dispatch_async(dispatch_get_main_queue())
+                    DispatchQueue.main.async
                     {
                         self.loadPhotos();
                     }
@@ -138,17 +138,17 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    public override func preferredStatusBarUpdateAnimation() -> UIStatusBarAnimation {
-        return .Fade
+    open override var preferredStatusBarUpdateAnimation : UIStatusBarAnimation {
+        return .fade
     }
     
-    public override func prefersStatusBarHidden() -> Bool {
+    open override var prefersStatusBarHidden : Bool {
         return hideStatusBar
     }
     
-    private func hideCollectionView (animated: Bool, completion: ((Bool) -> ())?)
+    fileprivate func hideCollectionView (_ animated: Bool, completion: ((Bool) -> ())?)
     {
-        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding, buttonHeight = self.uploadButtonHeight else { return; }
+        guard let height = self.collectionViewHeight, let padding = self.collectionViewPadding, let buttonHeight = self.uploadButtonHeight else { return; }
         
         height.constant = 0;
         padding.constant = 5;
@@ -160,7 +160,7 @@ public class FileSelectionViewController: UIViewController
         
         if animated
         {
-            UIView.animateWithDuration(self.animationDuration, animations: animations, completion: completion);
+            UIView.animate(withDuration: self.animationDuration, animations: animations, completion: completion);
 
         } else
         {
@@ -168,9 +168,9 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    private func showCollectionView (animated: Bool, completion: ((Bool) -> ())?)
+    fileprivate func showCollectionView (_ animated: Bool, completion: ((Bool) -> ())?)
     {
-        guard let height = self.collectionViewHeight, padding = self.collectionViewPadding else { return; }
+        guard let height = self.collectionViewHeight, let padding = self.collectionViewPadding else { return; }
         
         height.constant = 100;
         padding.constant = 15;
@@ -181,7 +181,7 @@ public class FileSelectionViewController: UIViewController
         
         if animated
         {
-            UIView.animateWithDuration(self.animationDuration, animations: animations, completion: completion);
+            UIView.animate(withDuration: self.animationDuration, animations: animations, completion: completion);
 
         } else
         {
@@ -189,7 +189,7 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    private func hideUploadButton (animated: Bool)
+    fileprivate func hideUploadButton (_ animated: Bool)
     {
         guard let height = self.uploadButtonHeight else { return; }
         
@@ -201,7 +201,7 @@ public class FileSelectionViewController: UIViewController
         
         if animated
         {
-            UIView.animateWithDuration(self.animationDuration, animations: animations);
+            UIView.animate(withDuration: self.animationDuration, animations: animations);
         
         } else
         {
@@ -209,7 +209,7 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    private func showUploadButton (animated: Bool)
+    fileprivate func showUploadButton (_ animated: Bool)
     {
         guard let height = self.uploadButtonHeight else { return; }
         
@@ -221,7 +221,7 @@ public class FileSelectionViewController: UIViewController
         
         if animated
         {
-            UIView.animateWithDuration(self.animationDuration, animations: animations);
+            UIView.animate(withDuration: self.animationDuration, animations: animations);
             
         } else
         {
@@ -229,15 +229,15 @@ public class FileSelectionViewController: UIViewController
         }
     }
     
-    private func isCollectionViewHidden () -> Bool
+    fileprivate func isCollectionViewHidden () -> Bool
     {
         guard let height = self.collectionViewHeight else { return false; }
         return height.constant == 0;
     }
     
-    private func loadPhotos ()
+    fileprivate func loadPhotos ()
     {
-        guard PHPhotoLibrary.authorizationStatus() == .Authorized else { return }
+        guard PHPhotoLibrary.authorizationStatus() == .authorized else { return }
 
         if (imageManager == nil) {
             imageManager = PHCachingImageManager()
@@ -247,10 +247,10 @@ public class FileSelectionViewController: UIViewController
         options.fetchLimit = 100;
         
         // find the most recent album
-        let recent = PHAssetCollection.fetchAssetCollectionsWithType(.SmartAlbum, subtype: .SmartAlbumRecentlyAdded, options: options);
+        let recent = PHAssetCollection.fetchAssetCollections(with: .smartAlbum, subtype: .smartAlbumRecentlyAdded, options: options)
 
-        options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ];
-        self.recentlyAddedAssets = PHAsset.fetchAssetsInAssetCollection(recent[0] as! PHAssetCollection, options: options);
+        options.sortDescriptors = [ NSSortDescriptor(key: "creationDate", ascending: false) ]
+        self.recentlyAddedAssets = PHAsset.fetchAssets(in: recent[0] , options: options)
         self.collectionView?.reloadData();
 
         // if it is hidden we need to show it
@@ -260,28 +260,28 @@ public class FileSelectionViewController: UIViewController
         }
     }
 
-    public static func present (multiple: Bool = false, completion: (([UIImage], NSError?) -> ())?) throws
+    open static func present (_ multiple: Bool = false, completion: (([UIImage], NSError?) -> ())?) throws
     {
         let controller = FileSelectionViewController();
         try controller.present(multiple, completion: completion)
     }
     
-    public func present (multiple: Bool = false, completion: (([UIImage], NSError?) -> ())?) throws
+    open func present (_ multiple: Bool = false, completion: (([UIImage], NSError?) -> ())?) throws
     {
-        guard let window = UIApplication.sharedApplication().keyWindow, root = window.rootViewController else { throw FileSelectionViewControllerError.NoKeyWindow
+        guard let window = UIApplication.shared.keyWindow, let root = window.rootViewController else { throw FileSelectionViewControllerError.noKeyWindow
         }
 
         let presenter = root.presentedViewController ?? root
         self.completion = completion
-        self.modalPresentationStyle = .OverFullScreen
+        self.modalPresentationStyle = .overFullScreen
         self.selectMultiple = multiple;
         self.modalPresentationCapturesStatusBarAppearance = true
-        presenter.presentViewController(self, animated: true, completion: nil)
+        presenter.present(self, animated: true, completion: nil)
     }
     
-    public func hide ()
+    open func hide ()
     {
-        self.presentingViewController?.dismissViewControllerAnimated(true)
+        self.presentingViewController?.dismiss(animated: true)
         {
             if let completion = self.completion
             {
@@ -290,55 +290,55 @@ public class FileSelectionViewController: UIViewController
         };
     }
     
-    private func adjustOptions ()
+    fileprivate func adjustOptions ()
     {
-        guard let library = self.libraryButton, photo = self.photoButton else { return; }
+        guard let library = self.libraryButton, let photo = self.photoButton else { return; }
         
-        if !UIImagePickerController.isSourceTypeAvailable(.Camera)
+        if !UIImagePickerController.isSourceTypeAvailable(.camera)
         {
-            photo.hidden = true;
+            photo.isHidden = true;
         }
         
-        if !UIImagePickerController.isSourceTypeAvailable(.PhotoLibrary)
+        if !UIImagePickerController.isSourceTypeAvailable(.photoLibrary)
         {
-            library.hidden = true;
+            library.isHidden = true;
         }
     }
     
-    @IBAction func chooseFromLibraryButtonPressed(sender: UIButton)
+    @IBAction func chooseFromLibraryButtonPressed(_ sender: UIButton)
     {
         let controller = UIImagePickerController();
-        controller.sourceType = .PhotoLibrary;
+        controller.sourceType = .photoLibrary;
         controller.delegate = self;
-        self.presentViewController(controller, animated: true, completion: nil);
+        self.present(controller, animated: true, completion: nil);
     }
  
-    @IBAction func takePhotoButtonPressed(sender: UIButton)
+    @IBAction func takePhotoButtonPressed(_ sender: UIButton)
     {
         hideStatusBar = true
         
         let controller = UIImagePickerController()
-        controller.sourceType = .Camera
-        controller.modalPresentationStyle = .FullScreen
+        controller.sourceType = .camera
+        controller.modalPresentationStyle = .fullScreen
         controller.delegate = self
-        self.presentViewController(controller, animated: true, completion: nil)
+        self.present(controller, animated: true, completion: nil)
     }
 
-    @IBAction func cancelButtonPressed(sender: UIButton)
+    @IBAction func cancelButtonPressed(_ sender: UIButton)
     {
         self.hide();
     }
     
-    @IBAction func uploadPhotosButtonPressed(sender: UIButton)
+    @IBAction func uploadPhotosButtonPressed(_ sender: UIButton)
     {
         if let completion = self.completion
         {
             self.selectedImages(completion);
-            self.presentingViewController?.dismissViewControllerAnimated(true, completion: nil);
+            self.presentingViewController?.dismiss(animated: true, completion: nil);
         }
     }
     
-    private func selectedImages (completion: (([UIImage], NSError?) -> ()))
+    fileprivate func selectedImages (_ completion: @escaping (([UIImage], NSError?) -> ()))
     {
         guard self.selectionOrder.count > 0 else { completion([], nil); return; }
         
@@ -359,7 +359,7 @@ public class FileSelectionViewController: UIViewController
             
             if let asset = asset as? PHAsset
             {
-                self.imageManager?.requestImageForAsset(asset, targetSize: PHImageManagerMaximumSize, contentMode: .AspectFill, options: nil)
+                self.imageManager?.requestImage(for: asset, targetSize: PHImageManagerMaximumSize, contentMode: .aspectFill, options: nil)
                 {
                     (image, info) in
                     if let image = image
@@ -377,41 +377,39 @@ public class FileSelectionViewController: UIViewController
     }
 }
 
-public enum FileSelectionViewControllerError: ErrorType
+public enum FileSelectionViewControllerError: Error
 {
-    case NoKeyWindow
+    case noKeyWindow
 }
 
 // MARK: - UIIimagePickerControllerDelegate Methods
 
 extension FileSelectionViewController: UIImagePickerControllerDelegate, UINavigationControllerDelegate
 {
-    public func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]?)
+    public func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any])
     {
-        if let info = info, let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        {
+        if let image = info[UIImagePickerControllerOriginalImage] as? UIImage {
             // there's a case below where we've reset the list of assets to a single image.
             // The main case of .Camera or a recent photo selection requires the original recent photos
             // so we're going to get those back here. There's probably another way to do this, and that's
             // store the results as different intance variables.
             
             // if we've come from the camera, 
-            if (picker.sourceType == .Camera)
+            if (picker.sourceType == .camera)
             {
                 self.saveImage(image)
 
                 self.hideStatusBar = false
-                picker.dismissViewControllerAnimated(true) {}
+                picker.dismiss(animated: true) {}
             }
             else
             {
                 // you picked an image from the camera roll, you didn't take it just then
-                let url = info[UIImagePickerControllerReferenceURL] as! NSURL
-                let result = PHAsset.fetchAssetsWithALAssetURLs([url], options: nil)
-                if let photoObject = result.firstObject as? PHAsset {
-                    
+                let url = info[UIImagePickerControllerReferenceURL] as! URL
+                let result = PHAsset.fetchAssets(withALAssetURLs: [url], options: nil)
+                if let photoObject = result.firstObject {
                     if let assets = self.recentlyAddedAssets {
-                        let idx = assets.indexOfObject(photoObject)
+                        let idx = assets.index(of: photoObject)
                         
                         // if the image is in the list we already have, select it
                         if idx != NSNotFound {
@@ -420,12 +418,12 @@ extension FileSelectionViewController: UIImagePickerControllerDelegate, UINaviga
                             collectionView?.reloadData();
                             self.clearSelectionOrder();
                             
-                            let indexPath = NSIndexPath(forItem: idx, inSection: 1)
+                            let indexPath = IndexPath(item: idx, section: 1)
                             self.addToSelectionOrder(indexPath)
                             
                             self.hideStatusBar = false
-                            picker.dismissViewControllerAnimated(true) {
-                                self.collectionView?.selectItemAtIndexPath(indexPath, animated: true, scrollPosition: .CenteredHorizontally)
+                            picker.dismiss(animated: true) {
+                                self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
                             }
                         } else {
                             //photo not available, lets just replace the photos and select it.
@@ -434,10 +432,10 @@ extension FileSelectionViewController: UIImagePickerControllerDelegate, UINaviga
                             collectionView?.reloadData();
                             self.clearSelectionOrder();
                             
-                            let indexPath = NSIndexPath(forItem: 0, inSection: 0)
+                            let indexPath = IndexPath(item: 0, section: 0)
                             self.addToSelectionOrder(indexPath)
-                            self.collectionView?.selectItemAtIndexPath(indexPath, animated: true, scrollPosition: .Left)
-                            picker.dismissViewControllerAnimated(true) {}
+                            self.collectionView?.selectItem(at: indexPath, animated: true, scrollPosition: .left)
+                            picker.dismiss(animated: true) {}
                         }
                     }
                 }
@@ -445,67 +443,67 @@ extension FileSelectionViewController: UIImagePickerControllerDelegate, UINaviga
         }
     }
     
-    public func imagePickerControllerDidCancel(picker: UIImagePickerController)
+    public func imagePickerControllerDidCancel(_ picker: UIImagePickerController)
     {
         self.hideStatusBar = false
-        picker.dismissViewControllerAnimated(true) {}
+        picker.dismiss(animated: true) {}
     }
 }
 
 extension FileSelectionViewController
 {
-    private func fetchPhotoAlbum(completion:(assetCollection: PHAssetCollection?) -> ())
+    fileprivate func fetchPhotoAlbum(_ completion:@escaping (_ assetCollection: PHAssetCollection?) -> ())
     {
         guard let albumName = self.photoAlbumName else {
-            completion(assetCollection: nil)
+            completion(nil)
             return
         }
         
         let fetchOptions = PHFetchOptions()
         fetchOptions.predicate = NSPredicate(format: "title = %@", albumName)
-        let collection : PHFetchResult = PHAssetCollection.fetchAssetCollectionsWithType(.Album, subtype: .Any, options: fetchOptions)
+        let collection : PHFetchResult = PHAssetCollection.fetchAssetCollections(with: .album, subtype: .any, options: fetchOptions)
         
-        if let firstObj = collection.firstObject as! PHAssetCollection?
+        if let firstObj = collection.firstObject 
         {
-            completion(assetCollection: firstObj)
+            completion(firstObj)
         }
         else
         {
-            PHPhotoLibrary.sharedPhotoLibrary().performChanges({
-                var createAlbumRequest : PHAssetCollectionChangeRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollectionWithTitle(albumName as String)
+            PHPhotoLibrary.shared().performChanges({
+                let createAlbumRequest : PHAssetCollectionChangeRequest = PHAssetCollectionChangeRequest.creationRequestForAssetCollection(withTitle: albumName as String)
                 self.photoAlbumPlaceholder = createAlbumRequest.placeholderForCreatedAssetCollection
                 
                 }, completionHandler: { success, error in
-                    dispatch_async(dispatch_get_main_queue(), {
+                    DispatchQueue.main.async(execute: {
                         if (success)
                         {
-                            var collectionFetchResult = PHAssetCollection.fetchAssetCollectionsWithLocalIdentifiers([self.photoAlbumPlaceholder!.localIdentifier], options: nil)
-                            completion(assetCollection:collectionFetchResult.firstObject as! PHAssetCollection?)
+                            let collectionFetchResult = PHAssetCollection.fetchAssetCollections(withLocalIdentifiers: [self.photoAlbumPlaceholder!.localIdentifier], options: nil)
+                            completion(collectionFetchResult.firstObject )
                         }
                         else
                         {
-                            completion(assetCollection: nil)
+                            completion(nil)
                         }
                     });
             })
         }
     }
     
-    private func saveImage(image: UIImage)
+    fileprivate func saveImage(_ image: UIImage)
     {
         // try and sav it in the album we have created
         fetchPhotoAlbum(){ assetCollection in
-            PHPhotoLibrary.sharedPhotoLibrary().performChanges({
+            PHPhotoLibrary.shared().performChanges({
 
-                let createAssetRequest = PHAssetChangeRequest.creationRequestForAssetFromImage(image)
+                let createAssetRequest = PHAssetChangeRequest.creationRequestForAsset(from: image)
                 let assetPlaceholder = createAssetRequest.placeholderForCreatedAsset
-                dispatch_async(dispatch_get_main_queue(), { 
+                DispatchQueue.main.async(execute: { 
                     self.recentlyAddedPhotoLocalIdentifier = assetPlaceholder
                 })
                 if let assetCollection = assetCollection, let assetPlaceholder = assetPlaceholder
                 {
-                    let albumChangeRequest = PHAssetCollectionChangeRequest(forAssetCollection: assetCollection)!
-                    albumChangeRequest.addAssets([assetPlaceholder])
+                    let albumChangeRequest = PHAssetCollectionChangeRequest(for: assetCollection)!
+                    albumChangeRequest.addAssets([assetPlaceholder] as NSArray)
                 }
                 }, completionHandler: { success, error in
 //                    dispatch_async(dispatch_get_main_queue(), { 
@@ -520,12 +518,12 @@ extension FileSelectionViewController
 
 extension FileSelectionViewController: UICollectionViewDataSource
 {
-    public func numberOfSectionsInCollectionView(collectionView: UICollectionView) -> Int
+    public func numberOfSections(in collectionView: UICollectionView) -> Int
     {
         return 2;
     }
     
-    public func collectionView(collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
+    public func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int
     {
         switch section {
         case 0:
@@ -535,9 +533,9 @@ extension FileSelectionViewController: UICollectionViewDataSource
         }
     }
     
-    public func collectionView(collectionView: UICollectionView, cellForItemAtIndexPath indexPath: NSIndexPath) -> UICollectionViewCell
+    public func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell
     {
-        let cell = collectionView.dequeueReusableCellWithReuseIdentifier(FileSelectionCollectionViewCell.reuseIdentifier, forIndexPath: indexPath) as! FileSelectionCollectionViewCell;
+        let cell = collectionView.dequeueReusableCell(withReuseIdentifier: FileSelectionCollectionViewCell.reuseIdentifier, for: indexPath) as! FileSelectionCollectionViewCell;
         
         var asset:AnyObject?
         
@@ -550,11 +548,11 @@ extension FileSelectionViewController: UICollectionViewDataSource
         
         if let asset = asset as? PHAsset
         {
-            self.imageManager?.requestImageForAsset(asset, targetSize: cell.frame.size, contentMode: .AspectFill, options: nil)
+            self.imageManager?.requestImage(for: asset, targetSize: cell.frame.size, contentMode: .aspectFill, options: nil)
             {
                 image, info in
                 cell.image = image;
-                if let order = self.selectionOrder.indexOf(indexPath)
+                if let order = self.selectionOrder.index(of: indexPath)
                 {
                     cell.selectedOrder = order + 1;
                 }
@@ -572,32 +570,32 @@ extension FileSelectionViewController: UICollectionViewDataSource
 
 extension FileSelectionViewController: UICollectionViewDelegate
 {
-    public func collectionView(collectionView: UICollectionView, didSelectItemAtIndexPath indexPath: NSIndexPath)
+    public func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath)
     {
         self.addToSelectionOrder(indexPath)
     }
     
-    public func collectionView(collectionView: UICollectionView, didDeselectItemAtIndexPath indexPath: NSIndexPath)
+    public func collectionView(_ collectionView: UICollectionView, didDeselectItemAt indexPath: IndexPath)
     {
         self.removeFromSelectionOrder(indexPath)
     }
     
     func updateSelectionOrder ()
     {
-        guard let paths = self.collectionView?.indexPathsForVisibleItems() else { return; }
+        guard let paths = self.collectionView?.indexPathsForVisibleItems else { return; }
         for path in paths
         {
-            var index = self.selectionOrder.indexOf(path) ?? -1;
+            var index = self.selectionOrder.index(of: path) ?? -1;
             index += 1;
-            (self.collectionView?.cellForItemAtIndexPath(path) as? FileSelectionCollectionViewCell)?.selectedOrder = index
+            (self.collectionView?.cellForItem(at: path) as? FileSelectionCollectionViewCell)?.selectedOrder = index
         }
     }
     
-    private func removeFromSelectionOrder(indexPath: NSIndexPath)
+    fileprivate func removeFromSelectionOrder(_ indexPath: IndexPath)
     {
-        if let index = self.selectionOrder.indexOf(indexPath)
+        if let index = self.selectionOrder.index(of: indexPath)
         {
-            self.selectionOrder.removeAtIndex(index);
+            self.selectionOrder.remove(at: index);
             self.updateSelectionOrder();
             if self.selectionOrder.count == 0
             {
@@ -606,11 +604,11 @@ extension FileSelectionViewController: UICollectionViewDelegate
         }
     }
     
-    private func addToSelectionOrder(indexPath: NSIndexPath)
+    fileprivate func addToSelectionOrder(_ indexPath: IndexPath)
     {
         let shouldShow = self.selectionOrder.count == 0;
         
-        if self.selectionOrder.indexOf(indexPath) == nil
+        if self.selectionOrder.index(of: indexPath) == nil
         {
             self.selectionOrder.append(indexPath)
             self.updateSelectionOrder();
@@ -621,7 +619,7 @@ extension FileSelectionViewController: UICollectionViewDelegate
         }
     }
     
-    private func clearSelectionOrder()
+    fileprivate func clearSelectionOrder()
     {
         self.selectionOrder.removeAll()
         self.hideUploadButton(false);
@@ -632,14 +630,14 @@ extension FileSelectionViewController: UICollectionViewDelegate
 
 extension FileSelectionViewController: PHPhotoLibraryChangeObserver
 {
-    public func photoLibraryDidChange(changeInstance: PHChange)
+    public func photoLibraryDidChange(_ changeInstance: PHChange)
     {
-        dispatch_async(dispatch_get_main_queue())
+        DispatchQueue.main.async
         {
-            guard let assets = self.recentlyAddedAssets, collection = self.collectionView else { return };
-            if let details = changeInstance.changeDetailsForFetchResult(assets)
+            guard let assets = self.recentlyAddedAssets, let collection = self.collectionView else { return };
+            if let details = changeInstance.changeDetails(for: assets as! PHFetchResult<PHObject>)
             {
-                self.recentlyAddedAssets = details.fetchResultAfterChanges;
+                self.recentlyAddedAssets = details.fetchResultAfterChanges as? PHFetchResult<PHAsset>
 
                 guard details.hasIncrementalChanges else {
                     self.clearSelectionOrder();
@@ -648,67 +646,66 @@ extension FileSelectionViewController: PHPhotoLibraryChangeObserver
                 }
                 
                 if let removed = details.removedIndexes {
-                    let indexPaths = removed.map { NSIndexPath(forRow: $0, inSection: 1) };
-                    indexPaths.map(self.removeFromSelectionOrder)
-                    collection.deleteItemsAtIndexPaths(indexPaths)
+                    let indexPaths = removed.map { IndexPath(row: $0, section: 1) };
+                    _ = indexPaths.map(self.removeFromSelectionOrder)
+                    collection.deleteItems(at: indexPaths)
                 }
                 
                 if let added = details.insertedIndexes {
-                    if let selectedIndexes = collection.indexPathsForSelectedItems() {
-                        selectedIndexes.map(self.removeFromSelectionOrder)
+                    if let selectedIndexes = collection.indexPathsForSelectedItems {
+                        _ = selectedIndexes.map(self.removeFromSelectionOrder)
                     }
                     
-                    collection.insertItemsAtIndexPaths(added.map { NSIndexPath(forRow: $0, inSection: 1)})
+                    collection.insertItems(at: added.map { IndexPath(row: $0, section: 1)})
                     
-                    if let selectedIndexes = collection.indexPathsForSelectedItems() {
-                        selectedIndexes.map(self.addToSelectionOrder)
+                    if let selectedIndexes = collection.indexPathsForSelectedItems {
+                        _ = selectedIndexes.map(self.addToSelectionOrder)
                     }
                 }
                 
                 if let changed = details.changedIndexes {
-                    let selectedIndexes = collection.indexPathsForSelectedItems()
-                    collection.reloadItemsAtIndexPaths(changed.map { NSIndexPath(forRow: $0, inSection: 1)})
+                    let selectedIndexes = collection.indexPathsForSelectedItems
+                    collection.reloadItems(at: changed.map { IndexPath(row: $0, section: 1)})
                     
                     // Reselect afer refresh. No need to add/remove from selectionOrder, indexes wont change
                     if let selectedIndexes = selectedIndexes {
                         for index in selectedIndexes {
-                            collection.selectItemAtIndexPath(index, animated: false, scrollPosition: .None)
+                            collection.selectItem(at: index, animated: false, scrollPosition: UICollectionViewScrollPosition())
                         }
                     }
                 }
                 
-                details.enumerateMovesWithBlock { from, to in
-                    if let selectedIndexes = collection.indexPathsForSelectedItems() {
-                        selectedIndexes.map(self.removeFromSelectionOrder)
+                details.enumerateMoves { from, to in
+                    if let selectedIndexes = collection.indexPathsForSelectedItems {
+                        _ = selectedIndexes.map(self.removeFromSelectionOrder)
                     }
-                    collection.moveItemAtIndexPath(NSIndexPath(forRow: from, inSection: 1), toIndexPath: NSIndexPath(forRow: to, inSection: 1))
+                    collection.moveItem(at: IndexPath(row: from, section: 1), to: IndexPath(row: to, section: 1))
                     
-                    if let selectedIndexes = collection.indexPathsForSelectedItems() {
-                        selectedIndexes.map(self.addToSelectionOrder)
+                    if let selectedIndexes = collection.indexPathsForSelectedItems {
+                        _ = selectedIndexes.map(self.addToSelectionOrder)
                     }
                 }
                 
                 // If we have a recently added image from the camera we iterate over the assets from fetchResultAfterChanges
                 // and attempt to select it in the collectionView.
                 if let newImage = self.recentlyAddedPhotoLocalIdentifier {
-                    if let selectedIndexes = collection.indexPathsForSelectedItems() {
+                    if let selectedIndexes = collection.indexPathsForSelectedItems {
                         for indexPath in selectedIndexes {
-                            collection.deselectItemAtIndexPath(indexPath, animated: false)
+                            collection.deselectItem(at: indexPath, animated: false)
                             self.removeFromSelectionOrder(indexPath)
                         }
                     }
 
-                    assets.enumerateObjectsUsingBlock() { obj, index, stop in
-                        guard let obj = obj as? PHObject else { return }
+                    assets.enumerateObjects({ obj, index, stop in
                         if obj.localIdentifier == newImage.localIdentifier {
                             self.recentlyAddedPhotoLocalIdentifier = nil
-                            stop.memory = true
+                            stop.pointee = true
                             
-                            let indexPath = NSIndexPath(forRow: index, inSection: 1)
-                            collection.selectItemAtIndexPath(indexPath, animated: true, scrollPosition: .CenteredHorizontally)
+                            let indexPath = IndexPath(row: index, section: 1)
+                            collection.selectItem(at: indexPath, animated: true, scrollPosition: .centeredHorizontally)
                             self.addToSelectionOrder(indexPath)
                         }
-                    }
+                    })
                 }
             }
         }

@@ -10,11 +10,11 @@ import UIKit
 
 class FileSelectionView: UIView
 {
-    private var didLoadInitialConstraints = false;
+    fileprivate var didLoadInitialConstraints = false
     
     required init?(coder aDecoder: NSCoder) {
         super.init(coder: aDecoder);
-        self.translatesAutoresizingMaskIntoConstraints = false;
+        self.translatesAutoresizingMaskIntoConstraints = false
     }
     
     override func updateConstraints()
@@ -23,8 +23,8 @@ class FileSelectionView: UIView
         
         if !self.didLoadInitialConstraints
         {
-            self.superview?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("H:|[view]|", options: [], metrics: nil, views: ["view": self]))
-            self.superview?.addConstraints(NSLayoutConstraint.constraintsWithVisualFormat("V:[view]|", options: [], metrics: nil, views: ["view": self]))
+            self.superview?.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "H:|[view]|", options: [], metrics: nil, views: ["view": self]))
+            self.superview?.addConstraints(NSLayoutConstraint.constraints(withVisualFormat: "V:[view]|", options: [], metrics: nil, views: ["view": self]))
             self.didLoadInitialConstraints = true;
         }
     }
